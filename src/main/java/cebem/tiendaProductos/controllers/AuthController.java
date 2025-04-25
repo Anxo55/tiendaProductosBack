@@ -12,20 +12,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-     @Autowired
+    @Autowired
     private AuthService authService;
 
     @Autowired
     private AuthenticationManager authManager;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtil jwtUtil; 
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto dto) {
@@ -39,12 +40,17 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(dto.username, dto.password)
         );
 
-        UserDetails user = (UserDetails) authentication.getPrincipal();
-        String token = jwtUtil.generateToken(user);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String token = jwtUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(Map.of("token", token));
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(auth -> auth.getAuthority())
+                .toList();
+
+        return ResponseEntity.ok(Map.of(
+                "token", token,
+                "username", userDetails.getUsername(),
+                "roles", roles
+        ));
     }
-
-
-    
 }

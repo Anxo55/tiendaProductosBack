@@ -1,7 +1,10 @@
 package cebem.tiendaProductos.config;
 
-import java.io.IOException;
-
+import cebem.tiendaProductos.security.CustomUserDetailsService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,11 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import cebem.tiendaProductos.security.CustomUserDetailsService;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -28,7 +27,6 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // ⛔ Ignorar rutas públicas como login y registro
         String path = request.getServletPath();
         if (path.startsWith("/api/auth")) {
             filterChain.doFilter(request, response);
@@ -36,9 +34,8 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         final String authHeader = request.getHeader("Authorization");
-
-        String username = null;
         String token = null;
+        String username = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);

@@ -2,6 +2,7 @@ package cebem.tiendaProductos.controllers;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import cebem.tiendaProductos.services.ProductService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/productos")
 @CrossOrigin("http://localhost:4200")
 @RequiredArgsConstructor

@@ -1,7 +1,6 @@
 package cebem.tiendaProductos.config;
 
 import cebem.tiendaProductos.security.CustomUserDetailsService;
-import cebem.tiendaProductos.config.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
 
     @Autowired
     private JwtFilter jwtFilter;
