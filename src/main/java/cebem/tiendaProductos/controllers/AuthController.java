@@ -1,56 +1,42 @@
 package cebem.tiendaProductos.controllers;
 
-import cebem.tiendaProductos.dto.LoginDto;
-import cebem.tiendaProductos.dto.RegisterDto;
-import cebem.tiendaProductos.services.AuthService;
 import cebem.tiendaProductos.config.JwtUtil;
+import cebem.tiendaProductos.dto.LoginDto;
+import cebem.tiendaProductos.models.AuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
-    private AuthService authService;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    private AuthenticationManager authManager;
+    private CustomUserDetailsService userDetailsService;
 
     @Autowired
-    private JwtUtil jwtUtil; 
+    private JwtUtil jwtUtil;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDto dto) {
-        authService.register(dto);
-        return ResponseEntity.ok("Usuario registrado correctamente");
-    }
-
+    // Endpoint para hacer login y generar un token JWT
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDto dto) {
-        Authentication authentication = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(dto.username, dto.password)
+    public AuthenticationResponse login(@RequestBody LoginDto request) {
+        // Autenticación con el AuthenticationManager
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.username,
+                        request.password
+                )
         );
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtUtil.generateToken(userDetails);
+        // Cargar los detalles del usuario y generar un JWT
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.username);
+        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(auth -> auth.getAuthority())
-                .toList();
-
-        return ResponseEntity.ok(Map.of(
-                "token", token,
-                "username", userDetails.getUsername(),
-                "roles", roles
-        ));
+        return new AuthenticationResponse(jwt); // Devuelve el JWT
     }
 }

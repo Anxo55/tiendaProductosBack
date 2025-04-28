@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true) // habilita @PreAuthorize
 public class SecurityConfig {
 
     @Autowired
@@ -37,8 +37,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/api/auth/**").permitAll() // Permitir login y register
+                .requestMatchers("/api/admin/**").hasRole("ADMIN") // Solo ADMIN puede entrar aquí
+                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // USER y ADMIN aquí
+                .anyRequest().authenticated() // Todo lo demás necesita estar logueado
             )
             .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
