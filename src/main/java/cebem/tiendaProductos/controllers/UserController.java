@@ -13,7 +13,7 @@ import cebem.tiendaProductos.services.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/usuarios")
 @CrossOrigin("http://localhost:4200")
 @RequiredArgsConstructor
 public class UserController {

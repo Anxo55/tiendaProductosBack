@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
-@RequestMapping("/productos")
+@RequestMapping("/api/productos")
 @CrossOrigin("http://localhost:4200")
 @RequiredArgsConstructor
 public class ProductController {
@@ -34,11 +34,13 @@ public class ProductController {
         return productService.listarProductoPorId(id);
     } 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public Product crearProducto(Product product) {
         return productService.crearProducto(product);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping
     public void borrarProducto(Long id) {
         productService.borrarProducto(id);

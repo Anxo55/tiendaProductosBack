@@ -24,7 +24,7 @@ public class JwtUtil {
     @PostConstruct
     public void init() {
         byte[] keyBytes = Base64.getDecoder().decode(secret);
-        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);  // Genera la clave de firma HMAC
     }
 
     // Extraer el nombre de usuario del token
@@ -41,7 +41,7 @@ public class JwtUtil {
     // Extraer todas las reclamaciones del token
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(secretKey)  // Usa la clave secreta para verificar la firma
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -61,10 +61,10 @@ public class JwtUtil {
     public String generateJwtToken(Authentication authentication) {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
         return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
-                .setIssuedAt(new Date())
+                .setSubject(userPrincipal.getUsername())  // Nombre de usuario como subject
+                .setIssuedAt(new Date())  // Fecha de emisión
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 día
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .signWith(secretKey, SignatureAlgorithm.HS256)  // Firma con el algoritmo HS256
                 .compact();
     }
 
