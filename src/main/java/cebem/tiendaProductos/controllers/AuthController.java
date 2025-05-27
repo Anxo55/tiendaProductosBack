@@ -4,7 +4,6 @@ import cebem.tiendaProductos.config.JwtUtil;
 import cebem.tiendaProductos.dto.LoginDto;
 import cebem.tiendaProductos.dto.RegisterDto;
 import cebem.tiendaProductos.entities.AuthenticationResponse;
-import cebem.tiendaProductos.security.CustomUserDetailsService;
 import cebem.tiendaProductos.services.AuthService;
 import jakarta.validation.Valid;
 

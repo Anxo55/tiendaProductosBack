@@ -21,5 +21,9 @@ public class CategoryService {
     public Category crearCategoria(Category category) {
         return categoryRepository.save(category);
     }
+
+    public Category listarCategoriaPorId(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    }
     
 }

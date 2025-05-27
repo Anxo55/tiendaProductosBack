@@ -29,6 +29,11 @@ public class CategoryController {
         return categoryService.listarCategorias();
     }
 
+    @GetMapping("/{id}")
+    public Category listarCategoriaPorId(Long id) {
+        return categoryService.listarCategoriaPorId(id);
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')") // Solo los usuarios con rol ADMIN pueden crear categorías
     @PostMapping
     public Category crearCategoria(@RequestBody Category category) {
