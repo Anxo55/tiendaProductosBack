@@ -2,22 +2,18 @@ package cebem.tiendaProductos.controllers;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import cebem.tiendaProductos.entities.User;
 import cebem.tiendaProductos.services.UserService;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/usuarios")
 @CrossOrigin("http://localhost:4200")
-@RequiredArgsConstructor
 public class UserController {
 
+    @Autowired
     private UserService userService;
 
     @GetMapping
@@ -26,13 +22,18 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User perfilUsuario(Long id) {
+    public User perfilUsuario(@PathVariable Long id) {
         return userService.listarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public User actualizarPerfil(Long id, User userACtualizado) {
-        return userService.actualizarUsuario(id, userACtualizado);
+    public User actualizarPerfil(@PathVariable Long id, @RequestBody User userActualizado) {
+        return userService.actualizarUsuario(id, userActualizado);
     }
-    
+
+    // Nuevo endpoint para obtener el perfil del usuario autenticado
+    @GetMapping("/perfil")
+    public User obtenerPerfil() {
+        return userService.obtenerUsuarioAutenticado();
+    }
 }

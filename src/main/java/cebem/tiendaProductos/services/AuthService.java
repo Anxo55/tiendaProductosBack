@@ -35,6 +35,7 @@ public class AuthService {
                 .username(dto.username)
                 .email(dto.email)
                 .password(passwordEncoder.encode(dto.password))
+                .imageUrl(dto.imageUrl)
                 .roles(roles)
                 .build();
 

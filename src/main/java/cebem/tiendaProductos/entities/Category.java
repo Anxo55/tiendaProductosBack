@@ -33,6 +33,9 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Product> products = new ArrayList<>();

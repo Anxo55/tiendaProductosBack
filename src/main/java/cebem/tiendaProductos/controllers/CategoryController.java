@@ -2,15 +2,10 @@ package cebem.tiendaProductos.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import cebem.tiendaProductos.dto.CategoryDto;
 import cebem.tiendaProductos.entities.Category;
 import cebem.tiendaProductos.services.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @GetMapping
     public List<Category> listarCategorias() {
@@ -30,14 +24,13 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public Category listarCategoriaPorId(Long id) {
+    public Category listarCategoriaPorId(@PathVariable Long id) {
         return categoryService.listarCategoriaPorId(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')") // Solo los usuarios con rol ADMIN pueden crear categorías
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public Category crearCategoria(@RequestBody Category category) {
-        return categoryService.crearCategoria(category);
+    public Category crearCategoria(@RequestBody CategoryDto categoryDto) {
+        return categoryService.crearCategoria(categoryDto);
     }
-
 }

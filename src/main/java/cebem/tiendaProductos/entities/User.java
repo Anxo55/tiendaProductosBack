@@ -41,6 +41,9 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles")
     private Set<String> roles = new HashSet<>();
