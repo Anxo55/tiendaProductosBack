@@ -1,41 +1,49 @@
 # 1. Registro de usuarios
 - http://localhost:8080/api/auth/register
 
+```
     {
-    "username": "uesr",
-    "email": "user@gmail.com",
+    "username": "anxo",
+    "email": "anxo.campos260204@gmail.com",
     "password": "Ad1234",
-    "roles": ["USER"]
+    "roles": ["ADMIN"],
+    "imageUrl": "1000100074.jpg"
     }
-
+```
 
 # 2. Login de usuarios
 - http://localhost:8080/api/auth/login
 
+```
     {
     "username": "user",
     "password": "Ad1234"
     }
+```
 
 # 3. Crear categoria
 - http://localhost:8080/api/categorias
   
+  ```
     {
-        "name":"Informatica"
+        "name":"Informatica",
+        "imageUrl": "imagen.jpg
     }
+  ```
 
 # 4. Crear producto
+```
 - http://localhost:8080/api/productos
   
-    {
-  "name": "Laptop Dell XPS 13",
-  "description": "Laptop ultradelgada con procesador i7 y pantalla 4K",
-  "price": 1200.00,
-  "stock": 50,
-  "category": {
-    "id": 1
-  }
+  {
+  "name": "Laptop Lenovo",
+  "description": "14 pulgadas, 16GB RAM",
+  "price": 800.0,
+  "stock": 5,
+  "imageUrl": "https://www.tuexperto.com/wp-content/uploads/2017/11/a_fondo_Lenovo_Legion_Y920_03.jpg",
+  "categoryId": 1
 }
+```
 
 # 5. Obtener lista de productos
 

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -29,7 +31,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        // Evitar filtrar rutas públicas
         if (path.startsWith("/api/auth")) {
             filterChain.doFilter(request, response);
             return;
@@ -46,18 +47,33 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
                 if (jwtUtil.validateToken(token, userDetails)) {
+                    // Extraemos roles del token
+                    List<String> roles = jwtUtil.extractRoles(token);
+
+                    // Convertimos roles String a GrantedAuthority (asegúrate que los roles tengan el prefijo ROLE_)
+                    var authorities = roles.stream()
+                        .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
+                        .map(role -> new org.springframework.security.core.authority.SimpleGrantedAuthority(role))
+                        .collect(Collectors.toList());
+
                     UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                            new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                    logger.info("Usuario autenticado: " + username);
+                    logger.info("Roles en contexto: " + authorities);
                 } else {
                     logger.warn("JWT token inválido o expirado");
                 }
             }
 
         } catch (Exception e) {
-            logger.error("Error en la validación del token JWT: {}", e);
+            logger.error("Error en la validación del token JWT: {}");
         }
 
         filterChain.doFilter(request, response);

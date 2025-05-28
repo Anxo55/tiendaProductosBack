@@ -28,6 +28,11 @@ public class ProductController {
         return productService.listarProductoPorId(id);
     }
 
+    @GetMapping("/categoria/{id}")
+    public List<Product> listarPorCategoria(@PathVariable Long id) {
+        return productService.listarProductoPorCategoria(id);
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public Product crearProducto(@RequestBody ProductDto productDto) {
