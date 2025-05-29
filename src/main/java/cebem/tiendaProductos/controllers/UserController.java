@@ -28,7 +28,6 @@ public class UserController {
     public List<User> listarUsuarios() {
         logger.info("Usuario accediendo a listarUsuarios: " +
             SecurityContextHolder.getContext().getAuthentication().getName());
-        logger.info("Roles: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         return userService.listarUsuarios();
     }
 
@@ -37,7 +36,6 @@ public class UserController {
     public User perfilUsuario(@PathVariable Long id) {
         logger.info("Usuario accediendo a perfilUsuario: " +
             SecurityContextHolder.getContext().getAuthentication().getName());
-        logger.info("Roles: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         return userService.listarPorId(id);
     }
 

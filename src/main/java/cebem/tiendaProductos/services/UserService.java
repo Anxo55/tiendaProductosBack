@@ -28,16 +28,34 @@ public class UserService {
     }
 
     public User actualizarUsuario(Long id, User datosActualizados) {
+        // Obtener usuario autenticado
+        String usernameAutenticado = userUtils.getUsernameFromContext();
+        User usuarioAutenticado = userRepository.findByUsername(usernameAutenticado)
+                .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
+
+        // Verificar si el usuario autenticado es el mismo que el del ID
+        if (!usuarioAutenticado.getId().equals(id)) {
+            throw new SecurityException("No tienes permiso para actualizar este perfil.");
+        }
+
+        // Obtener datos actuales
         User userExistente = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
 
-        userExistente.setUsername(datosActualizados.getUsername());
-        userExistente.setEmail(datosActualizados.getEmail());
+        // Solo actualizamos campos permitidos
+        if (datosActualizados.getUsername() != null) {
+            userExistente.setUsername(datosActualizados.getUsername());
+        }
+
+        if (datosActualizados.getEmail() != null) {
+            userExistente.setEmail(datosActualizados.getEmail());
+        }
+
+        // No se permite cambiar roles, password ni imageUrl desde este endpoint
 
         return userRepository.save(userExistente);
     }
 
-    // Nuevo método: obtener usuario autenticado desde el contexto de seguridad
     public User obtenerUsuarioAutenticado() {
         String username = userUtils.getUsernameFromContext();
         return userRepository.findByUsername(username)

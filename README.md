@@ -27,7 +27,7 @@
   ```
     {
         "name":"Informatica",
-        "imageUrl": "imagen.jpg
+        "imageUrl": "imagen.jpg"
     }
   ```
 
