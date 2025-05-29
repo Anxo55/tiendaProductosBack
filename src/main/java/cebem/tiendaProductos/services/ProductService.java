@@ -30,11 +30,10 @@ public class ProductService {
     }
 
     public List<Product> listarProductoPorCategoria(Long categoriaId) {
-    Category category = categoryRepository.findById(categoriaId)
-        .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
-    return productRepository.findByCategory(category);
-}
-
+        Category category = categoryRepository.findById(categoriaId)
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+        return productRepository.findByCategory(category);
+    }
 
     public Product crearProducto(ProductDto dto) {
         Category category = categoryRepository.findById(dto.getCategoryId())
