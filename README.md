@@ -42,7 +42,7 @@
   "stock": 5,
   "imageUrl": "https://www.tuexperto.com/wp-content/uploads/2017/11/a_fondo_Lenovo_Legion_Y920_03.jpg",
   "categoryId": 1
-}
+  }
 ```
 
 # 5. Obtener lista de productos
