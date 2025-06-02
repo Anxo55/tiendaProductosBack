@@ -26,13 +26,16 @@ public class CustomUserDetailsService implements UserDetailsService {
             .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
         List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toLowerCase()))
+                // Aseguramos que cada rol tenga el prefijo ROLE_ y esté en mayúsculas
+                .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
+                .map(String::toUpperCase)
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-                return new org.springframework.security.core.userdetails.User(
-                    user.getUsername(),
-                    user.getPassword(),
-                    authorities
-            );
-        }
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                authorities
+        );
+    }
 }
